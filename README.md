@@ -6,20 +6,20 @@ The best way to run these scripts is within a dedicated Conda environment. This 
 If you don't have Conda,is higly recommad to install it with Miniforge.
 You can download and install the latest version of Miniforge for your specific OS from the git repository: https://github.com/conda-forge/miniforge/releases
 
-1. Clone the present repository
+## 1. Clone the present repository
 
 ````bash
 git clone https://github.com/matheus-cosentino/EvoTools.git
 ````
 
-2. Create the Conda Environment
+## 2. Create the Conda Environment
 From your terminal, navigate to the EvoTools directory and run:
 
 ````bash
 conda env create -f EvoTools.yaml
 ````
 
-3. Activate your Conda env
+## 3. Activate your Conda env
 
 ````bash
 conda activate EvoTools
