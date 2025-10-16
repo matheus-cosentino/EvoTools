@@ -18,3 +18,4 @@ dependencies:
   - pandas
   - mafft
   - diamond
+  - iqtree
