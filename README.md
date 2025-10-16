@@ -176,7 +176,7 @@ Extract_Fastas_Diamond.py --diamond Hits.txt \
 cat L1_Hits.fasta PAVE_L1_nt.fasta > Total_PV_Nt.fasta
 
 # Add amino acid sequences to reference alignment
-# (Assumes you have a translated version of your hits)
+# (Assumes you have a translated version of your hits, i recommend Aliview https://ormbunkar.se/aliview/)
 mafft --add L1_Hits.translated.fas Pave_aln_aa.fasta > AA_Aln_PV_all.fasta
 ```
 
