@@ -200,11 +200,11 @@ iqtree2 -s NT_Aln_PV.fasta \
 Finally, generate a publication-quality image of your tree.
 ```bash
 Plot_Tree.R -t NT_Aln_PV.fasta.treefile \
-            -m metadados.txt \
+            -m metadata.txt \
             --color_column Host \
-            --id_column Nome \
-            -l circular \
-            -o My_Final_Tree.svg
+            --id_column Acc \
+            --species_column Species \
+            -l circular
 ```
 The result is a fully annotated phylogenetic tree.
 
