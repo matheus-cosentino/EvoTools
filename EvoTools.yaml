@@ -1,0 +1,20 @@
+name: EvoTools
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - r-base=4.3
+  - r-argparse
+  - bioconductor-ggtree
+  - r-ggplot2
+  - r-ape
+  - r-dplyr
+  - bioconductor-treeio
+  - r-scales
+  - r-phytools
+  - r-rcolorbrewer
+  - biopython
+  - pandas
+  - mafft
+  - diamond
