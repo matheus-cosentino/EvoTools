@@ -10,6 +10,7 @@ dependencies:
   - r-ggplot2
   - r-ape
   - r-dplyr
+  - r-svglite
   - bioconductor-treeio
   - r-scales
   - r-phytools
