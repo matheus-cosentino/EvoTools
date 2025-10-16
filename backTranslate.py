@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #Sript to back translate aligned aminoacid sequences to nucleotide sequences
 
 # Import packages to be used in the script
