@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from Bio import SeqIO
 import pandas as pd
 import argparse
