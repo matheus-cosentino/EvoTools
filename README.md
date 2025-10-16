@@ -1,6 +1,15 @@
-# EvoTools 🔬
-A collection of bioinformatics scripts to aid in the identification and analysis of viral genes.
+#  _______           _______ _________ _______  _______  _        _______ 
+# (  ____ \|\     /|(  ___  )\__   __/(  ___  )(  ___  )( \      (  ____ \
+# | (    \/| )   ( || (   ) |   ) (   | (   ) || (   ) || (      | (    \/
+# | (__    | |   | || |   | |   | |   | |   | || |   | || |      | (_____ 
+# |  __)   ( (   ) )| |   | |   | |   | |   | || |   | || |      (_____  )
+# | (       \ \_/ / | |   | |   | |   | |   | || |   | || |            ) |
+# | (____/\  \   /  | (___) |   | |   | (___) || (___) || (____/\/\____) |
+# (_______/   \_/   (_______)   )_(   (_______)(_______)(_______/\_______)
 
+                                                                      
+A collection of bioinformatics scripts to aid in the identification and analysis of viral genes.
+Developed By Cosentino 2025
 # Installation
 The best way to run these scripts is within a dedicated Conda environment. This ensures all software dependencies are handled correctly and your analysis is reproducible. The provided EvoTools.yaml file will set up everything you need.
 If you don't have Conda,is higly recommad to install it with Miniforge.
