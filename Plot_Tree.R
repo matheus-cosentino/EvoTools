@@ -118,7 +118,6 @@ p <- p +
               linesize = 0.2,
               offset = 0.05,
 		husjt = 0)  +
-  xlim(0, 1.05) +
   geom_tippoint(aes(color = !!sym(args$color_column)),
                 size = 8) +
   
