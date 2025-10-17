@@ -136,6 +136,7 @@ This allows you to run the scripts from any directory.
 ## 🧬 Example Workflow: Phylogenetic Analysis
 
 This tutorial demonstrates a complete workflow, from contigs to a final tree.
+This workflow was developed to iddentify specific genes (exemplified as Papillomavirus L1 gene from PAVE) within contigs of metagenomic data,
 
 **Required files:**
 * `PAVE_L1_nt.translated.fas`: Reference sequences (amino acids).
