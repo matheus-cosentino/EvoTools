@@ -6,7 +6,11 @@
 required_packages <- c("argparse", "ggtree", "ggplot2", "ape", "dplyr",
                        "treeio", "tidytree", "scales", "phytools", "viridis")
 
+<<<<<<< HEAD
 # Define default mirror for automatic downloads
+=======
+# Define um mirror padrão para downloads automáticos
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 cran_mirror <- "https://cloud.r-project.org"
 
 for (pkg in required_packages) {
@@ -19,6 +23,10 @@ for (pkg in required_packages) {
       }
       BiocManager::install(pkg, ask = FALSE)
     } else {
+<<<<<<< HEAD
+=======
+      # AQUI ESTAVA O ERRO: Adicionado 'repos = cran_mirror'
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
       install.packages(pkg, repos = cran_mirror)
     }
   }
@@ -46,7 +54,11 @@ parser$add_argument("-m", "--metadata", type = "character", required = TRUE, hel
 
 # --- HIGHLIGHTING & CLADES ---
 parser$add_argument("--tips_file", type="character", default=NULL, help="File to prune tree (subtree).")
+<<<<<<< HEAD
 parser$add_argument("--highlight_file", type="character", default=NULL, help="File with IDs to show tip points as STARS.")
+=======
+parser$add_argument("--highlight_file", type="character", default=NULL, help="File with IDs to show tip points.")
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 
 parser$add_argument("--clades_file", type="character", default=NULL, 
                     help="Manual TSV (tip, label, color) for clade bars.")
@@ -70,7 +82,11 @@ parser$add_argument("--color_column", type = "character", default = "Genus", hel
 # --- SUPPORT VALUES ---
 parser$add_argument("--support_mode", type="character", default="single", 
                     choices=c("single", "dual", "none"),
+<<<<<<< HEAD
                     help="How to parse support: 'single', 'dual', or 'none'.")
+=======
+                    help="how to parse support: 'single', 'dual', or 'none'.")
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 parser$add_argument("--support_cutoff", type="double", default=75, help="Threshold for support values.")
 
 # --- OUTPUT ---
@@ -81,12 +97,20 @@ parser$add_argument("-H", "--height", type = "double", default = 12, help = "Hei
 args <- parser$parse_args()
 
 # -----------------
+<<<<<<< HEAD
 # 3. DATA LOADING & DIAGNOSTICS
+=======
+# 3. DATA LOADING
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 # -----------------
 cat("Loading tree file:", args$tree, "\n")
 tree <- read.tree(args$tree)
 
+<<<<<<< HEAD
 # Pruning Logic
+=======
+# Pruning
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 if (!is.null(args$tips_file)) {
   cat("Pruning tree...\n")
   tips_to_keep <- readLines(args$tips_file)
@@ -100,6 +124,7 @@ tree <- phytools::midpoint.root(tree)
 
 cat("Loading metadata:", args$metadata, "\n")
 metadata <- read.csv(args$metadata, sep = "\t", header = TRUE, comment.char="")
+<<<<<<< HEAD
 
 # --- ID CHECK / DIAGNOSTIC BLOCK START ---
 cat("\n=== STARTING ID DIAGNOSTICS ===\n")
@@ -156,6 +181,18 @@ if (!is.null(args$highlight_file)) {
   cat(sprintf("  Highlight Check: Found %d matches out of %d requested IDs.\n", n_high, length(highlight_ids)))
 } else {
   metadata$should_show_point <- FALSE 
+=======
+metadata[[args$id_column]] <- as.character(metadata[[args$id_column]])
+metadata <- metadata[metadata[[args$id_column]] %in% tree$tip.label, ]
+if (nrow(metadata) == 0) stop("No matching IDs found in metadata.")
+
+# Highlight logic
+if (!is.null(args$highlight_file)) {
+  highlight_ids <- readLines(args$highlight_file)
+  metadata$should_show_point <- metadata[[args$id_column]] %in% highlight_ids
+} else {
+  metadata$should_show_point <- TRUE
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 }
 
 # Color Map (Tip Points)
@@ -173,6 +210,7 @@ p <- ggtree(tree, layout = args$layout) %<+% metadata
 
 # 1. Tip Labels
 if (!args$hide_tip_labels) {
+<<<<<<< HEAD
   p <- p + geom_tiplab(aes(label = FinalLabel), size=3.5, offset=0.05, align=TRUE, linesize=0.2, hjust=0)
   
   # Aumentado para 0.8 para evitar cortes
@@ -191,18 +229,33 @@ p <- p + geom_tippoint(aes(color = !!sym(args$color_column), subset = should_sho
 # Color Scale
 p <- p + scale_color_manual(name = args$color_column, values = color_map, na.value="grey50")
 
+=======
+  p <- p + geom_tiplab(aes(label = FinalLabel), size=5, offset=0.05, align=TRUE, linesize=0.2, hjust=0)
+}
+
+# 2. Tip Points
+p <- p + geom_tippoint(aes(color = !!sym(args$color_column), subset = should_show_point), size = 8) +
+  scale_color_manual(name = args$color_column, values = color_map, na.value="grey50")
+
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 # 3. Support Values
 cutoff <- args$support_cutoff
 if (args$support_mode == "single") {
   p <- p + geom_point2(aes(subset = !isTip & !is.na(as.numeric(label)) & as.numeric(label) >= cutoff),
                        shape=23, size=3, fill="black", color="black") +
+<<<<<<< HEAD
     geom_point2(aes(subset = !isTip & !is.na(as.numeric(label)) & as.numeric(label) < cutoff),
                 shape=23, size=3, fill="white", color="black")
+=======
+           geom_point2(aes(subset = !isTip & !is.na(as.numeric(label)) & as.numeric(label) < cutoff),
+                       shape=23, size=3, fill="white", color="black")
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 } else if (args$support_mode == "dual") {
   p <- p + geom_point2(aes(subset = !isTip & 
                              as.numeric(sub("/.*", "", label)) >= cutoff & 
                              as.numeric(sub(".*/", "", label)) >= cutoff),
                        shape=23, size=3, fill="black", color="black") +
+<<<<<<< HEAD
     geom_point2(aes(subset = !isTip & 
                       ((as.numeric(sub("/.*", "", label)) >= cutoff & as.numeric(sub(".*/", "", label)) < cutoff) |
                          (as.numeric(sub("/.*", "", label)) < cutoff & as.numeric(sub(".*/", "", label)) >= cutoff))),
@@ -211,18 +264,37 @@ if (args$support_mode == "single") {
                       as.numeric(sub("/.*", "", label)) < cutoff & 
                       as.numeric(sub(".*/", "", label)) < cutoff),
                 shape=23, size=3, fill="white", color="black")
+=======
+           geom_point2(aes(subset = !isTip & 
+                             ((as.numeric(sub("/.*", "", label)) >= cutoff & as.numeric(sub(".*/", "", label)) < cutoff) |
+                              (as.numeric(sub("/.*", "", label)) < cutoff & as.numeric(sub(".*/", "", label)) >= cutoff))),
+                       shape=23, size=3, fill="gray", color="black") +
+           geom_point2(aes(subset = !isTip & 
+                             as.numeric(sub("/.*", "", label)) < cutoff & 
+                             as.numeric(sub(".*/", "", label)) < cutoff),
+                       shape=23, size=3, fill="white", color="black")
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 }
 
 # 4. Clade Labels Calculation
 clade_df <- NULL
 
+<<<<<<< HEAD
 # Strategy A: Manual File
+=======
+# Strategy A: Manual File (Overrides sorting logic usually, as colors are hardcoded)
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 if (!is.null(args$clades_file)) {
   cat("Adding Manual Clade Labels from file...\n")
   clade_df <- read.table(args$clades_file, header=TRUE, sep="\t", stringsAsFactors = FALSE)
   if(!"color" %in% colnames(clade_df)) clade_df$color <- "black"
+<<<<<<< HEAD
     
   # Strategy B: Automatic
+=======
+
+# Strategy B: Automatic with Optional Depth Sorting
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 } else if (!is.null(args$auto_clade_label)) {
   cat("Adding Automatic Clade Labels from column:", args$auto_clade_label, "\n")
   
@@ -232,20 +304,36 @@ if (!is.null(args$clades_file)) {
   
   # --- SORTING LOGIC ---
   if (args$sort_by_depth) {
+<<<<<<< HEAD
     cat("   -> Calculating distances from root to sort colors (Basal -> Distal)...\n")
     
     node_depths <- ape::node.depth.edgelength(tree)
+=======
+    cat("  -> Calculating distances from root to sort colors (Basal -> Distal)...\n")
+    
+    # Calculate node depths from root
+    node_depths <- ape::node.depth.edgelength(tree)
+    
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
     group_depths <- numeric(length(unique_groups))
     names(group_depths) <- unique_groups
     
     for (grp in unique_groups) {
+<<<<<<< HEAD
       # NOTA: Usando 'valid_meta$label' porque renomeamos a coluna ID para label na posicao 1
       tips <- valid_meta$label[valid_meta[[target_col]] == grp]
+=======
+      tips <- valid_meta[[args$id_column]][valid_meta[[target_col]] == grp]
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
       valid_tips <- intersect(tips, tree$tip.label)
       if (length(valid_tips) > 1) {
         mrca <- ape::getMRCA(tree, valid_tips)
         group_depths[grp] <- node_depths[mrca]
       } else if (length(valid_tips) == 1) {
+<<<<<<< HEAD
+=======
+        # If single tip, depth is tip depth
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
         tip_idx <- which(tree$tip.label == valid_tips)
         group_depths[grp] <- node_depths[tip_idx]
       } else {
@@ -253,26 +341,50 @@ if (!is.null(args$clades_file)) {
       }
     }
     
+<<<<<<< HEAD
     sorted_groups <- names(sort(group_depths))
+=======
+    # Sort groups by depth
+    sorted_groups <- names(sort(group_depths))
+    
+    # Assign colors using Viridis (or Turbo) along this sorted list
+    # Turbo is great for distinct spectral colors
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
     clade_colors <- viridis::turbo(length(sorted_groups)) 
     names(clade_colors) <- sorted_groups
     
   } else {
+<<<<<<< HEAD
+=======
+    # Default: Alphabetical/Random Hue
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
     clade_colors <- scales::hue_pal()(length(unique_groups))
     names(clade_colors) <- unique_groups
   }
   
+<<<<<<< HEAD
   color_lookup_keys <- as.character(valid_meta[[target_col]])
   
   clade_df <- data.frame(
     tip = valid_meta$label, 
+=======
+  # Map colors back to dataframe
+  color_lookup_keys <- as.character(valid_meta[[target_col]])
+  
+  clade_df <- data.frame(
+    tip = valid_meta[[args$id_column]],
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
     label = valid_meta[[target_col]],
     color = clade_colors[color_lookup_keys],
     stringsAsFactors = FALSE
   )
 }
 
+<<<<<<< HEAD
 # 5. Clade Plotting
+=======
+# 5. Clade Plotting (with Local Environment Fix)
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 if (!is.null(clade_df)) {
   clade_df$label <- as.character(clade_df$label)
   
@@ -290,10 +402,17 @@ if (!is.null(clade_df)) {
           node = mrca_node,
           label = current_lbl,
           color = current_color,
+<<<<<<< HEAD
           offset = 0.2,        
           barsize = 2,          
           fontsize = 6,        
           align = TRUE          
+=======
+          offset = 0.2,      
+          barsize = 2,       
+          fontsize = 6,      
+          align = TRUE       
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
         )
       }
     })
@@ -309,4 +428,8 @@ p <- p + geom_treescale(fontsize=3.5, linesize=0.7) +
 if (args$flip) p <- p + scale_y_reverse()
 
 cat("Saving to:", args$output, "\n")
+<<<<<<< HEAD
 ggsave(p, filename=args$output, width=args$width, height=args$height)
+=======
+ggsave(p, filename=args$output, width=args$width, height=args$height)
+>>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
