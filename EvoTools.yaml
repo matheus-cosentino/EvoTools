@@ -20,3 +20,9 @@ dependencies:
   - mafft
   - diamond
   - iqtree
+  - pip
+  - pip:
+      - bcbio-gff==0.7.1
+      - dna-features-viewer==3.1.5
+      - matplotlib==3.10.8
+      - pandas==2.3.3
