@@ -139,7 +139,6 @@ metadata <- metadata[, c(args$id_column, other_cols)]
 # 3. Renomear a PRIMEIRA coluna (agora a correta) para "label"
 colnames(metadata)[1] <- "label"
 # -------------------------------------------------------------
-
 # Highlight Logic
 if (!is.null(args$highlight_file)) {
   cat("Loading highlight file...\n")
@@ -153,16 +152,6 @@ if (!is.null(args$highlight_file)) {
   cat(sprintf("  Highlight Check: Found %d matches out of %d requested IDs.\n", n_high, length(highlight_ids)))
 } else {
   metadata$should_show_point <- FALSE 
-metadata[[args$id_column]] <- as.character(metadata[[args$id_column]])
-metadata <- metadata[metadata[[args$id_column]] %in% tree$tip.label, ]
-if (nrow(metadata) == 0) stop("No matching IDs found in metadata.")
-
-# Highlight logic
-if (!is.null(args$highlight_file)) {
-  highlight_ids <- readLines(args$highlight_file)
-  metadata$should_show_point <- metadata[[args$id_column]] %in% highlight_ids
-} else {
-  metadata$should_show_point <- TRUE
 }
 
 # Color Map (Tip Points)
@@ -198,13 +187,6 @@ p <- p + geom_tippoint(aes(color = !!sym(args$color_column), subset = should_sho
 # Color Scale
 p <- p + scale_color_manual(name = args$color_column, values = color_map, na.value="grey50")
 
-  p <- p + geom_tiplab(aes(label = FinalLabel), size=5, offset=0.05, align=TRUE, linesize=0.2, hjust=0)
-}
-
-# 2. Tip Points
-p <- p + geom_tippoint(aes(color = !!sym(args$color_column), subset = should_show_point), size = 8) +
-  scale_color_manual(name = args$color_column, values = color_map, na.value="grey50")
-
 # 3. Support Values
 cutoff <- args$support_cutoff
 if (args$support_mode == "single") {
@@ -212,8 +194,6 @@ if (args$support_mode == "single") {
                        shape=23, size=3, fill="black", color="black") +
     geom_point2(aes(subset = !isTip & !is.na(as.numeric(label)) & as.numeric(label) < cutoff),
                 shape=23, size=3, fill="white", color="black")
-           geom_point2(aes(subset = !isTip & !is.na(as.numeric(label)) & as.numeric(label) < cutoff),
-                       shape=23, size=3, fill="white", color="black")
 } else if (args$support_mode == "dual") {
   p <- p + geom_point2(aes(subset = !isTip & 
                              as.numeric(sub("/.*", "", label)) >= cutoff & 
@@ -227,14 +207,6 @@ if (args$support_mode == "single") {
                       as.numeric(sub("/.*", "", label)) < cutoff & 
                       as.numeric(sub(".*/", "", label)) < cutoff),
                 shape=23, size=3, fill="white", color="black")
-           geom_point2(aes(subset = !isTip & 
-                             ((as.numeric(sub("/.*", "", label)) >= cutoff & as.numeric(sub(".*/", "", label)) < cutoff) |
-                              (as.numeric(sub("/.*", "", label)) < cutoff & as.numeric(sub(".*/", "", label)) >= cutoff))),
-                       shape=23, size=3, fill="gray", color="black") +
-           geom_point2(aes(subset = !isTip & 
-                             as.numeric(sub("/.*", "", label)) < cutoff & 
-                             as.numeric(sub(".*/", "", label)) < cutoff),
-                       shape=23, size=3, fill="white", color="black")
 }
 
 # 4. Clade Labels Calculation
@@ -259,24 +231,17 @@ if (!is.null(args$clades_file)) {
     cat("   -> Calculating distances from root to sort colors (Basal -> Distal)...\n")
     
     node_depths <- ape::node.depth.edgelength(tree)
-    cat("  -> Calculating distances from root to sort colors (Basal -> Distal)...\n")
-    
-    # Calculate node depths from root
-    node_depths <- ape::node.depth.edgelength(tree)
     
     group_depths <- numeric(length(unique_groups))
     names(group_depths) <- unique_groups
     
     for (grp in unique_groups) {
-      # NOTA: Usando 'valid_meta$label' porque renomeamos a coluna ID para label na posicao 1
       tips <- valid_meta$label[valid_meta[[target_col]] == grp]
-      tips <- valid_meta[[args$id_column]][valid_meta[[target_col]] == grp]
       valid_tips <- intersect(tips, tree$tip.label)
       if (length(valid_tips) > 1) {
         mrca <- ape::getMRCA(tree, valid_tips)
         group_depths[grp] <- node_depths[mrca]
       } else if (length(valid_tips) == 1) {
-        # If single tip, depth is tip depth
         tip_idx <- which(tree$tip.label == valid_tips)
         group_depths[grp] <- node_depths[tip_idx]
       } else {
@@ -285,16 +250,11 @@ if (!is.null(args$clades_file)) {
     }
     
     sorted_groups <- names(sort(group_depths))
-    # Sort groups by depth
-    sorted_groups <- names(sort(group_depths))
     
-    # Assign colors using Viridis (or Turbo) along this sorted list
-    # Turbo is great for distinct spectral colors
     clade_colors <- viridis::turbo(length(sorted_groups)) 
     names(clade_colors) <- sorted_groups
     
   } else {
-    # Default: Alphabetical/Random Hue
     clade_colors <- scales::hue_pal()(length(unique_groups))
     names(clade_colors) <- unique_groups
   }
@@ -303,11 +263,6 @@ if (!is.null(args$clades_file)) {
   
   clade_df <- data.frame(
     tip = valid_meta$label, 
-  # Map colors back to dataframe
-  color_lookup_keys <- as.character(valid_meta[[target_col]])
-  
-  clade_df <- data.frame(
-    tip = valid_meta[[args$id_column]],
     label = valid_meta[[target_col]],
     color = clade_colors[color_lookup_keys],
     stringsAsFactors = FALSE
@@ -336,10 +291,6 @@ if (!is.null(clade_df)) {
           barsize = 2,          
           fontsize = 6,        
           align = TRUE          
-          offset = 0.2,      
-          barsize = 2,       
-          fontsize = 6,      
-          align = TRUE       
         )
       }
     })
@@ -356,5 +307,3 @@ if (args$flip) p <- p + scale_y_reverse()
 
 cat("Saving to:", args$output, "\n")
 ggsave(p, filename=args$output, width=args$width, height=args$height)
-ggsave(p, filename=args$output, width=args$width, height=args$height)
->>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
