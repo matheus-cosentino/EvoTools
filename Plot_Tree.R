@@ -71,7 +71,6 @@ parser$add_argument("--color_column", type = "character", default = "Genus", hel
 parser$add_argument("--support_mode", type="character", default="single", 
                     choices=c("single", "dual", "none"),
                     help="How to parse support: 'single', 'dual', or 'none'.")
-                    help="how to parse support: 'single', 'dual', or 'none'.")
 parser$add_argument("--support_cutoff", type="double", default=75, help="Threshold for support values.")
 
 # --- OUTPUT ---
@@ -99,7 +98,6 @@ tree <- phytools::midpoint.root(tree)
 
 cat("Loading metadata:", args$metadata, "\n")
 metadata <- read.csv(args$metadata, sep = "\t", header = TRUE, comment.char="")
-<<<<<<< HEAD
 
 # --- ID CHECK / DIAGNOSTIC BLOCK START ---
 cat("\n=== STARTING ID DIAGNOSTICS ===\n")
@@ -279,7 +277,6 @@ if (!is.null(args$clades_file)) {
         mrca <- ape::getMRCA(tree, valid_tips)
         group_depths[grp] <- node_depths[mrca]
       } else if (length(valid_tips) == 1) {
-=======
         # If single tip, depth is tip depth
         tip_idx <- which(tree$tip.label == valid_tips)
         group_depths[grp] <- node_depths[tip_idx]
