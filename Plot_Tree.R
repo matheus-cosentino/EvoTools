@@ -6,11 +6,6 @@
 required_packages <- c("argparse", "ggtree", "ggplot2", "ape", "dplyr",
                        "treeio", "tidytree", "scales", "phytools", "viridis")
 
-<<<<<<< HEAD
-# Define default mirror for automatic downloads
-=======
-# Define um mirror padrão para downloads automáticos
->>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
 cran_mirror <- "https://cloud.r-project.org"
 
 for (pkg in required_packages) {
@@ -23,10 +18,6 @@ for (pkg in required_packages) {
       }
       BiocManager::install(pkg, ask = FALSE)
     } else {
-<<<<<<< HEAD
-=======
-      # AQUI ESTAVA O ERRO: Adicionado 'repos = cran_mirror'
->>>>>>> d1c32e844c45f50c969856d3a494bc3b396698ec
       install.packages(pkg, repos = cran_mirror)
     }
   }
