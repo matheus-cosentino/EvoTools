@@ -46,7 +46,6 @@ parser$add_argument("-m", "--metadata", type = "character", required = TRUE, hel
 # --- HIGHLIGHTING & CLADES ---
 parser$add_argument("--tips_file", type="character", default=NULL, help="File to prune tree (subtree).")
 parser$add_argument("--highlight_file", type="character", default=NULL, help="File with IDs to show tip points as STARS.")
-parser$add_argument("--highlight_file", type="character", default=NULL, help="File with IDs to show tip points.")
 
 parser$add_argument("--clades_file", type="character", default=NULL, 
                     help="Manual TSV (tip, label, color) for clade bars.")
